@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programme 5km — Sub 18:00 — 17 semaines</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c10;
+    --surface: #14141c;
+    --card: #1c1c28;
+    --card-hover: #222230;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --accent3: #47c8ff;
+    --text: #efefef;
+    --muted: #666680;
+    --border: #252535;
+    --c-recup: #3a7bd5;
+    --c-ef: #22a87a;
+    --c-tempo: #e8931a;
+    --c-frac: #e84242;
+    --c-longue: #9b59b6;
+    --c-repos: #3a3a50;
+    --c-cross: #1a8a7a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 56px 48px 44px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 70% 100% at 70% -10%, rgba(232,255,71,.07) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 60% at 95% 90%, rgba(71,200,255,.05) 0%, transparent 50%);
+    pointer-events:none;
+  }
+  .hero-inner {
+    position:relative;
+    max-width:1200px; margin:0 auto;
+    display:flex; align-items:flex-end; gap:48px; flex-wrap:wrap;
+  }
+  .hero-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size: clamp(72px, 11vw, 130px);
+    line-height:.88;
+    letter-spacing:3px;
+  }
+  .hero-title em { color:var(--accent); font-style:normal; display:block; }
+  .hero-right { flex:1; min-width:220px; padding-bottom:6px; }
+  .hero-right p { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:4px; }
+  .time-row { display:flex; align-items:baseline; gap:12px; margin-bottom:14px; }
+  .time-from { font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--muted); text-decoration:line-through; }
+  .time-arr { font-size:18px; color:var(--muted); }
+  .time-to { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--accent); }
+  .meta-tags { display:flex; gap:8px; flex-wrap:wrap; }
+  .tag {
+    font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    padding:4px 10px; border-radius:4px;
+    background:rgba(255,255,255,.05); border:1px solid var(--border);
+    color:var(--muted);
+  }
+
+  /* NAV PILLS */
+  .nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(12,12,16,.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:10px 48px;
+  }
+  .nav-inner {
+    max-width:1200px; margin:0 auto;
+    display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+  }
+  .nav-pill {
+    font-size:11px; text-transform:uppercase; letter-spacing:1.5px;
+    padding:5px 12px; border-radius:20px; border:1px solid transparent;
+    cursor:pointer; background:transparent; color:var(--muted);
+    transition:all .2s;
+  }
+  .nav-pill:hover { color:var(--text); border-color:var(--border); }
+  .nav-pill.active { color:var(--bg); background:var(--accent); }
+
+  /* STATS */
+  .stats-row {
+    max-width:1200px; margin:0 auto;
+    padding:28px 48px;
+    display:flex; gap:12px; flex-wrap:wrap;
+  }
+  .stat {
+    flex:1; min-width:120px;
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:14px 18px; text-align:center;
+  }
+  .stat .v { font-family:'Bebas Neue',sans-serif; font-size:30px; color:var(--accent); line-height:1; }
+  .stat .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-top:4px; }
+
+  /* LEGEND */
+  .legend {
+    max-width:1200px; margin:0 auto;
+    padding:0 48px 24px;
+    display:flex; gap:18px; flex-wrap:wrap;
+  }
+  .leg { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+  .leg-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+  /* PHASES */
+  .phases { max-width:1200px; margin:0 auto; padding:0 48px 60px; }
+
+  .phase-block { margin-bottom:52px; }
+  .phase-head {
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:18px; padding-bottom:14px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+  }
+  .phase-badge {
+    font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:3px;
+    padding:4px 11px; border-radius:4px; text-transform:uppercase;
+  }
+  .phase-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; }
+  .phase-weeks { font-size:11px; color:var(--muted); margin-left:auto; letter-spacing:1px; }
+  .phase-note { font-size:12px; color:var(--muted); font-style:italic; width:100%; margin-top:-4px; }
+
+  /* WEEKS */
+  .weeks { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:12px; }
+
+  .wcard {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    overflow:hidden; transition:transform .18s, border-color .18s;
+  }
+  .wcard:hover { transform:translateY(-2px); border-color:#353550; }
+  .wcard.light { opacity:.85; }
+
+  .wcard-head {
+    padding:11px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid var(--border);
+  }
+  .wnum { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1px; }
+  .wvol { font-size:10px; color:var(--muted); background:rgba(255,255,255,.04); border:1px solid var(--border); padding:2px 8px; border-radius:20px; }
+
+  .wcard-body { padding:12px 16px; }
+
+  .srow {
+    display:flex; gap:10px; align-items:flex-start;
+    padding:7px 0; border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .srow:last-child { border-bottom:none; }
+  .sdot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .sday { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; }
+  .sdesc { font-size:13px; line-height:1.4; margin-top:2px; }
+  .sdetail { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.4; }
+
+  /* PACES TABLE */
+  .paces-section {
+    max-width:1200px; margin:0 auto;
+    padding:0 48px 32px;
+  }
+  .section-label {
+    font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:3px;
+    color:var(--muted); text-transform:uppercase; margin-bottom:12px;
+  }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { text-align:left; color:var(--muted); font-weight:400; text-transform:uppercase; letter-spacing:1px; padding:6px 10px; border-bottom:1px solid var(--border); }
+  td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.04); }
+  tr:last-child td { border-bottom:none; }
+  .pace { font-family:'Bebas Neue',sans-serif; font-size:15px; color:var(--accent); }
+
+  /* TIPS */
+  .tips-section { max-width:1200px; margin:0 auto; padding:0 48px 60px; }
+  .tips { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:12px; margin-top:12px; }
+  .tip {
+    background:var(--card); border-left:3px solid var(--accent);
+    padding:13px 15px; border-radius:0 8px 8px 0;
+    font-size:12px; line-height:1.55; color:var(--muted);
+  }
+  .tip strong { color:var(--text); display:block; margin-bottom:3px; font-size:13px; }
+
+  @media(max-width:600px) {
+    .hero, .nav, .stats-row, .legend, .phases, .paces-section, .tips-section { padding-left:20px; padding-right:20px; }
+    .weeks { grid-template-columns:1fr; }
+    .hero-title { font-size:64px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-title">5 KM<em>Sub 18:00</em></div>
+    </div>
+    <div class="hero-right">
+      <p>Objectif</p>
+      <div class="time-row">
+        <span class="time-from">19'55</span>
+        <span class="time-arr">→</span>
+        <span class="time-to">17'59</span>
+      </div>
+      <div class="meta-tags">
+        <span class="tag">17 semaines</span>
+        <span class="tag">S1–4 : 4j/sem</span>
+        <span class="tag">S5–14 : 6j/sem</span>
+        <span class="tag">S15–17 : 4j/sem</span>
+        <span class="tag">Allure cible 3:36/km</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner" id="navPills"></div>
+</nav>
+
+<div class="stats-row">
+  <div class="stat"><div class="v">17</div><div class="l">Semaines</div></div>
+  <div class="stat"><div class="v">76</div><div class="l">Séances</div></div>
+  <div class="stat"><div class="v">−1'56</div><div class="l">Gain visé</div></div>
+  <div class="stat"><div class="v">3:36</div><div class="l">Allure cible /km</div></div>
+  <div class="stat"><div class="v">28→50</div><div class="l">km/sem</div></div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--c-recup)"></div>Footing récup</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-ef)"></div>Endurance fondamentale</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-tempo)"></div>Tempo / Seuil</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-frac)"></div>Fractionné VMA</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-longue)"></div>Sortie longue</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-cross)"></div>Cross-training</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--c-repos)"></div>Repos</div>
+</div>
+
+<div class="phases" id="phases"></div>
+
+<div class="paces-section">
+  <div class="section-label">Allures de référence</div>
+  <table>
+    <thead><tr><th>Type</th><th>Allure /km</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Récupération</td><td><span class="pace">6:00–6:30</span></td><td style="color:var(--muted)">Très facile, conversation fluide</td></tr>
+      <tr><td>Endurance fondamentale</td><td><span class="pace">5:10–5:30</span></td><td style="color:var(--muted)">Confortable, légèrement essoufflé</td></tr>
+      <tr><td>Tempo / Seuil</td><td><span class="pace">3:58–4:15</span></td><td style="color:var(--muted)">Difficile mais tenable 20–40 min</td></tr>
+      <tr><td>Allure 5K cible</td><td><span class="pace">3:35–3:40</span></td><td style="color:var(--muted)">Vive, objectif course</td></tr>
+      <tr><td>VMA / fractionné court</td><td><span class="pace">3:10–3:25</span></td><td style="color:var(--muted)">Effort max court, récup égale</td></tr>
+      <tr><td>Côtes (30s effort)</td><td><span class="pace">~3:05–3:15</span></td><td style="color:var(--muted)">Effort perçu max, descente trot récup</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="tips-section">
+  <div class="section-label">Conseils clés</div>
+  <div class="tips">
+    <div class="tip"><strong>Échauffement</strong>15 min trot + gammes avant chaque séance de qualité (tempo, fractionné).</div>
+    <div class="tip"><strong>Retour au calme</strong>10–15 min trot très facile après chaque séance intense + étirements.</div>
+    <div class="tip"><strong>Côtes</strong>Sur 1 sortie longue sur 2 et optionnellement en remplacement d'un fractionné S5–S14.</div>
+    <div class="tip"><strong>Cross-training</strong>Vélo ou natation les jours off : maintient le cardio sans fatiguer les jambes.</div>
+    <div class="tip"><strong>FC au repos</strong>Si +7–8 bpm vs ta normale le matin, remplace la séance du jour par un footing léger.</div>
+    <div class="tip"><strong>Sommeil</strong>8h minimum. Les adaptations musculaires se font la nuit.</div>
+    <div class="tip"><strong>Tests 5K</strong>Semaines 8 et 17 : course test chrono pour mesurer la progression réelle.</div>
+    <div class="tip"><strong>Negative split</strong>Le jour J, km1 à 3:42–3:45, puis accélération progressive jusqu'au finish.</div>
+  </div>
+</div>
+
+<script>
+const C = {
+  recup:'var(--c-recup)', ef:'var(--c-ef)', tempo:'var(--c-tempo)',
+  frac:'var(--c-frac)', longue:'var(--c-longue)', repos:'var(--c-repos)', cross:'var(--c-cross)'
+};
+
+const R = (j,t,d,det) => ({day:j,type:t,desc:d,detail:det});
+const REST = (j,d) => R(j,'repos','Repos complet',d||'Récupération active recommandée');
+const CROSS = (j,d) => R(j,'cross',d||'Cross-training 45 min','Vélo ou natation — cardio sans impact');
+
+const plan = [
+  {
+    id:'p1', phase:'Phase 1 — Fondations aérobies', weeks:'Semaines 1–4',
+    color:'#3a7bd5', note:'4 séances/sem · 3 jours off (cross-training ou repos)',
+    data:[
+      { num:1, vol:'~28 km', light:false, sessions:[
+        R('Lundi','ef','Endurance fondamentale 40 min','~5:25/km — terrain plat, rythme conversation'),
+        R('Mercredi','frac','8 × 200m','Rec 1:30 trot — ~3:20/km · Footing 15 min échauff + retour calme'),
+        R('Vendredi','tempo','Tempo 3 × 8 min','Rec 3 min marche — ~4:12/km'),
+        R('Dimanche','longue','Sortie longue 55 min','~5:25/km — plat ou légèrement vallonné'),
+      ]},
+      { num:2, vol:'~30 km', light:false, sessions:[
+        R('Lundi','ef','Endurance fondamentale 45 min','~5:20/km'),
+        R('Mercredi','frac','10 × 200m','Rec 1:30 trot — ~3:18/km · Footing 15 min'),
+        R('Vendredi','tempo','Tempo 4 × 8 min','Rec 2:30 — ~4:08/km'),
+        R('Dimanche','longue','Sortie longue 60 min','~5:20/km — 1 sortie sur 2 avec dénivelé'),
+      ]},
+      { num:3, vol:'~32 km', light:false, sessions:[
+        R('Lundi','ef','Endurance fondamentale 50 min','~5:20/km'),
+        R('Mercredi','frac','6 × 400m','Rec 2 min — ~3:30/km · Footing 20 min'),
+        R('Vendredi','tempo','Tempo 2 × 12 min','Rec 4 min — ~4:05/km'),
+        R('Dimanche','longue','Sortie longue 65 min','~5:15/km — vallonné bienvenu'),
+      ]},
+      { num:4, vol:'~22 km', light:true, sessions:[
+        R('Lundi','recup','Footing récupération 25 min','~6:15/km — très facile'),
+        R('Mercredi','frac','6 × 200m allure 5K','Rec 2 min — ~3:38/km — legs frais'),
+        R('Vendredi','ef','Endurance 35 min','~5:25/km'),
+        R('Dimanche','longue','Sortie longue allégée 45 min','~5:30/km'),
+      ]},
+    ]
+  },
+  {
+    id:'p2', phase:'Phase 2 — Construction du volume & seuil', weeks:'Semaines 5–8',
+    color:'#e8931a', note:'6 séances/sem · 1 jour repos complet · Cross-training les autres jours off',
+    data:[
+      { num:5, vol:'~38 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 30 min','~6:05/km'),
+        CROSS('Mardi','Cross-training 40 min'),
+        R('Mercredi','tempo','Tempo continu 20 min','~4:05/km — effort soutenu maîtrisé'),
+        R('Jeudi','ef','Endurance fondamentale 45 min','~5:15/km'),
+        R('Vendredi','frac','8 × 400m','Rec 90 sec — ~3:28/km · Footing 20 min'),
+        R('Dimanche','longue','Sortie longue 70 min','~5:15/km, 1 sortie sur 2 vallonnée'),
+      ]},
+      { num:6, vol:'~42 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 30 min','~6:05/km'),
+        CROSS('Mardi'),
+        R('Mercredi','tempo','2 × 12 min tempo','Rec 4 min — ~4:02/km'),
+        R('Jeudi','ef','Endurance fondamentale 50 min','~5:15/km'),
+        R('Vendredi','frac','6 × 600m','Rec 2 min — ~3:28/km · Footing 20 min'),
+        R('Dimanche','longue','Sortie longue 75 min','~5:10/km'),
+      ]},
+      { num:7, vol:'~44 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 35 min','~6:00/km'),
+        CROSS('Mardi'),
+        R('Mercredi','tempo','Tempo continu 25 min','~4:00/km'),
+        R('Jeudi','ef','Endurance fondamentale 50 min','~5:12/km'),
+        R('Vendredi','frac','10 × 400m','Rec 90 sec — ~3:25/km · Footing 20 min'),
+        R('Dimanche','longue','Sortie longue 75 min','~5:10/km — terrain vallonné'),
+      ]},
+      { num:8, vol:'~30 km', light:true, sessions:[
+        R('Lundi','recup','Footing récupération 25 min','~6:15/km'),
+        CROSS('Mardi','Cross-training léger 30 min'),
+        R('Mercredi','ef','Endurance 35 min','~5:20/km'),
+        R('Jeudi','recup','Footing léger 20 min','Préparation test'),
+        R('Samedi','recup','Footing 15 min + 4 accélérations','Jambes prêtes'),
+        R('Dimanche','frac','🏁 TEST 5 KM','Course chrono — allure visée ~3:45–3:50/km'),
+      ]},
+    ]
+  },
+  {
+    id:'p3', phase:'Phase 3 — VMA & puissance', weeks:'Semaines 9–14',
+    color:'#e84242', note:'6 séances/sem · 1 jour repos complet · Cross-training les jours off',
+    data:[
+      { num:9, vol:'~44 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 30 min','~6:00/km'),
+        CROSS('Mardi'),
+        R('Mercredi','frac','5 × 1000m','Rec 2:30 — ~3:42/km · Footing 20 min'),
+        R('Jeudi','ef','Endurance fondamentale 50 min','~5:10/km'),
+        R('Vendredi','tempo','3 × 10 min tempo','Rec 3 min — ~3:58/km'),
+        R('Dimanche','longue','Sortie longue 80 min','~5:08/km — finish 10 min à ~4:20/km'),
+      ]},
+      { num:10, vol:'~46 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 30 min','~5:58/km'),
+        CROSS('Mardi'),
+        R('Mercredi','frac','6 × 800m','Rec 2 min — ~3:32/km · Footing 20 min'),
+        R('Jeudi','ef','Endurance fondamentale 55 min','~5:10/km'),
+        R('Vendredi','tempo','Tempo continu 28 min','~3:58/km'),
+        R('Dimanche','longue','Sortie longue 80 min','~5:08/km — vallonné'),
+      ]},
+      { num:11, vol:'~48 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 35 min','~5:58/km'),
+        CROSS('Mardi'),
+        R('Mercredi','frac','8 × 30 sec côtes à 6–8%','Rec : descente au trot — puissance musculaire'),
+        R('Jeudi','ef','Endurance fondamentale 55 min','~5:08/km'),
+        R('Vendredi','tempo','4 × 8 min allure 5K cible','Rec 3 min — ~3:36/km — sentir l\'allure'),
+        R('Dimanche','longue','Sortie longue 80 min','~5:05/km — terrain vallonné'),
+      ]},
+      { num:12, vol:'~50 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 35 min','~5:55/km'),
+        CROSS('Mardi'),
+        R('Mercredi','frac','4 × 1200m','Rec 3 min — ~3:35/km · Footing 15 min'),
+        R('Jeudi','ef','Endurance fondamentale 55 min','~5:08/km'),
+        R('Vendredi','tempo','3 × 10 min allure 5K cible','Rec 3 min — ~3:36/km'),
+        R('Dimanche','longue','Sortie longue 85 min','~5:05/km'),
+      ]},
+      { num:13, vol:'~44 km', light:false, sessions:[
+        R('Lundi','recup','Footing récupération 30 min','~6:00/km'),
+        CROSS('Mardi'),
+        R('Mercredi','frac','10 × 30 sec côtes','Rec : descente trot — intensité max'),
+        R('Jeudi','ef','Endurance fondamentale 50 min','~5:10/km'),
+        R('Vendredi','tempo','2 × 12 min allure 5K cible','Rec 4 min — ~3:36/km'),
+        R('Dimanche','longue','Sortie longue 80 min','~5:05/km'),
+      ]},
+      { num:14, vol:'~32 km', light:true, sessions:[
+        R('Lundi','recup','Footing récupération 25 min','~6:10/km'),
+        CROSS('Mardi','Cross-training léger 30 min'),
+        R('Mercredi','frac','5 × 400m allure cible','Rec 2 min — ~3:35/km'),
+        R('Jeudi','ef','Endurance 35 min','~5:20/km'),
+        R('Vendredi','recup','Footing 20 min + 4 accélérations','Très léger'),
+        R('Dimanche','longue','Sortie longue allégée 50 min','~5:20/km'),
+      ]},
+    ]
+  },
+  {
+    id:'p4', phase:'Phase 4 — Affûtage & performance', weeks:'Semaines 15–17',
+    color:'#e8ff47', note:'4 séances/sem · Réduire le volume, maintenir l\'intensité — arriver frais',
+    data:[
+      { num:15, vol:'~26 km', light:true, sessions:[
+        R('Lundi','recup','Footing récupération 25 min','~6:10/km'),
+        R('Mercredi','tempo','3 × 6 min allure 5K cible','Rec 3 min — ~3:35/km — se rappeler l\'allure'),
+        R('Vendredi','frac','6 × 300m','Rec 2 min — ~3:30/km — garder la vivacité'),
+        R('Dimanche','longue','Sortie 55 min dont 15 min à ~4:10/km','Finish progressif'),
+      ]},
+      { num:16, vol:'~18 km', light:true, sessions:[
+        R('Lundi','recup','Footing récupération 20 min','Très facile'),
+        R('Mercredi','frac','4 × 400m allure cible','Rec 2 min — ~3:35/km'),
+        R('Vendredi','recup','Footing 20 min + 5 accélérations de 80m','Garder les jambes vives'),
+        R('Dimanche','ef','Footing 35 min facile','~5:25/km — repos mental'),
+      ]},
+      { num:17, vol:'~12 km', light:true, sessions:[
+        R('Lundi','recup','Footing 20 min très léger','Garder les jambes actives uniquement'),
+        R('Mercredi','frac','3 × 200m allure cible','Rec 2 min — juste activer les fibres rapides'),
+        R('Vendredi','recup','Footing 15 min + 3 accélérations','Très léger — préserver l\'énergie'),
+        R('Dimanche','frac','🏁 COURSE 5 KM — OBJECTIF SUB 18:00','Départ 3:42/km → négatif split → finish à fond'),
+      ]},
+    ]
+  }
+];
+
+function render() {
+  // Nav pills
+  const nav = document.getElementById('navPills');
+  plan.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-pill';
+    btn.textContent = p.phase.split('—')[1]?.trim() || p.phase;
+    btn.onclick = () => document.getElementById(p.id).scrollIntoView({behavior:'smooth', block:'start'});
+    nav.appendChild(btn);
+  });
+
+  const container = document.getElementById('phases');
+
+  plan.forEach(phase => {
+    const block = document.createElement('div');
+    block.className = 'phase-block';
+    block.id = phase.id;
+
+    const ph = document.createElement('div');
+    ph.className = 'phase-head';
+    ph.innerHTML = `
+      <span class="phase-badge" style="background:${phase.color}20;color:${phase.color};border:1px solid ${phase.color}40">${phase.phase.split('—')[0].trim()}</span>
+      <span class="phase-name">${phase.phase.split('—')[1]?.trim() || ''}</span>
+      <span class="phase-weeks">${phase.weeks}</span>
+      <span class="phase-note">${phase.note}</span>
+    `;
+    block.appendChild(ph);
+
+    const grid = document.createElement('div');
+    grid.className = 'weeks';
+
+    phase.data.forEach(week => {
+      const card = document.createElement('div');
+      card.className = 'wcard' + (week.light ? ' light' : '');
+      card.innerHTML = `
+        <div class="wcard-head">
+          <span class="wnum">Semaine ${week.num}</span>
+          <span class="wvol">${week.vol}${week.light ? ' · Allégée' : ''}</span>
+        </div>
+        <div class="wcard-body">
+          ${week.sessions.map(s => `
+            <div class="srow">
+              <div class="sdot" style="background:${C[s.type]}"></div>
+              <div>
+                <div class="sday">${s.day}</div>
+                <div class="sdesc">${s.desc}</div>
+                <div class="sdetail">${s.detail}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    block.appendChild(grid);
+    container.appendChild(block);
+  });
+
+  // Scroll spy for nav
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.nav-pill').forEach((p,i) => {
+          p.classList.toggle('active', plan[i].id === e.target.id);
+        });
+      }
+    });
+  }, {threshold:0.2});
+
+  plan.forEach(p => {
+    const el = document.getElementById(p.id);
+    if (el) observer.observe(el);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
